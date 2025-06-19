@@ -20,7 +20,13 @@
 <body>
   <div id="map"></div>
 
+  <!-- Load Leaflet -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <!-- Load your consulting coverage data -->
+  <script src="coverage.js"></script>
+
+  <!-- Main Map Logic -->
   <script>
     const team = [
       {
@@ -53,6 +59,7 @@
       attribution: '© OpenStreetMap'
     }).addTo(map);
 
+    // === TEAM ICONS ===
     team.forEach(member => {
       const icon = L.icon({
         iconUrl: member.image,
@@ -64,6 +71,30 @@
         .addTo(map)
         .bindPopup(`<strong>${member.name}</strong><br><a href="mailto:${member.email}">Send Message</a>`);
     });
+
+    // === COVERAGE PINS ===
+    const stateCodes = new Set(); // for future state highlighting
+
+    async function placeCoveragePins() {
+      for (const location of coverage) {
+        stateCodes.add(location.state);
+
+        const response = await fetch(`https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(location.city)}&state=${location.state}&country=USA&format=json`);
+        const data = await response.json();
+        if (data.length > 0) {
+          const lat = parseFloat(data[0].lat);
+          const lon = parseFloat(data[0].lon);
+          L.circleMarker([lat, lon], {
+            radius: 5,
+            color: "#007bff",
+            fillColor: "#007bff",
+            fillOpacity: 0.8
+          }).addTo(map).bindPopup(`${location.city}, ${location.state}`);
+        }
+      }
+    }
+
+    placeCoveragePins();
   </script>
 </body>
 </html>
