@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Tower Leadership Coverage Map</title>
+  <title>Tower Leadership Coverage</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
-    body {
+    body, html {
       margin: 0;
+      padding: 0;
+      height: 100%;
       font-family: Arial, sans-serif;
     }
 
@@ -19,21 +21,29 @@
     .leaflet-marker-icon {
       border-radius: 50%;
       border: 2px solid black;
-      box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 5px rgba(0,0,0,0.5);
     }
 
-    .leaflet-popup-content {
-      font-size: 14px;
+    .map-title {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 20px;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      z-index: 999;
     }
   </style>
 </head>
 <body>
+  <div class="map-title">Tower Leadership Coverage Map</div>
   <div id="map"></div>
 
-  <!-- Load Leaflet -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-  <!-- Load coverage points -->
   <script type="module">
     import coveragePoints from './coverage.js';
 
@@ -44,27 +54,24 @@
       attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    // === TEAM ICONS ===
+    // === Team Members ===
     const team = [
       {
         name: "Lisa",
         state: "Atlanta, GA",
         image: "images/lisa.jpeg",
-        email: "lisa@towerleadership.com",
         coords: [33.7490, -84.3880]
       },
       {
         name: "Amanda",
         state: "Los Angeles, CA",
         image: "images/amanda.jpeg",
-        email: "amanda@towerleadership.com",
         coords: [34.0522, -118.2437]
       },
       {
         name: "Diana",
         state: "Chicago, IL",
         image: "images/diana.png",
-        email: "diana@towerleadership.com",
         coords: [41.8781, -87.6298]
       }
     ];
@@ -76,23 +83,22 @@
         className: 'team-icon'
       });
 
-      L.marker(member.coords, { icon: icon })
-        .addTo(map)
-        .bindPopup(`
-          <strong>${member.name}</strong><br>
-          <a href="https://www.instagram.com/towerleadership/" target="_blank">📷 Message on Instagram</a>
-        `);
+      const marker = L.marker(member.coords, { icon: icon }).addTo(map);
+
+      // Redirect to Instagram on click
+      marker.on('click', () => {
+        window.open("https://www.instagram.com/towerleadership/", "_blank");
+      });
     });
 
-    // === COVERAGE POINTS ===
+    // === Coverage Dots ===
     coveragePoints.forEach(point => {
       L.circleMarker([point.lat, point.lng], {
         radius: 5,
-        color: "#001F54",         // Navy Blue outline
-        fillColor: "#001F54",     // Navy Blue fill
-        fillOpacity: 0.85
-      })
-      .addTo(map);
+        color: "#001F3F", // Navy blue
+        fillColor: "#001F3F",
+        fillOpacity: 0.8
+      }).addTo(map);
     });
   </script>
 </body>
