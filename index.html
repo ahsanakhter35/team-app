@@ -54,25 +54,25 @@
       attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    // === Team Members ===
+    // === Team Members with Instagram ===
     const team = [
       {
         name: "Lisa",
-        state: "Atlanta, GA",
         image: "images/lisa.jpeg",
-        coords: [33.7490, -84.3880]
+        coords: [33.7490, -84.3880],
+        instagram: "https://www.instagram.com/towerleadership/"
       },
       {
         name: "Amanda",
-        state: "Los Angeles, CA",
         image: "images/amanda.jpeg",
-        coords: [34.0522, -118.2437]
+        coords: [34.0522, -118.2437],
+        instagram: "https://www.instagram.com/towerleadership/"
       },
       {
         name: "Diana",
-        state: "Chicago, IL",
         image: "images/diana.png",
-        coords: [41.8781, -87.6298]
+        coords: [41.8781, -87.6298],
+        instagram: "https://www.instagram.com/towerleadership/"
       }
     ];
 
@@ -85,9 +85,8 @@
 
       const marker = L.marker(member.coords, { icon: icon }).addTo(map);
 
-      // Redirect to Instagram on click
       marker.on('click', () => {
-        window.open("https://www.instagram.com/towerleadership/", "_blank");
+        window.open(member.instagram, "_blank");
       });
     });
 
